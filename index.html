@@ -167,22 +167,33 @@
 
             // Khởi tạo đồng hồ bấm giờ
             var startTime = new Date().getTime();
-            var timerInterval = setInterval(updateTimer, 1000);
+    var timerInterval = setInterval(updateTimer, 1000);
+    var reloadTriggered = false;
 
-            function updateTimer() {
-                var now = new Date().getTime();
-                var elapsedTime = now - startTime;
+    function updateTimer() {
+        var now = new Date().getTime();
+        var elapsedTime = now - startTime;
 
-                var hours = Math.floor(elapsedTime / (1000 * 60 * 60));
-                var minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+        var hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+        var minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
 
-                hours = hours < 10 ? "0" + hours : hours;
-                minutes = minutes < 10 ? "0" + minutes : minutes;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
 
-                $("#timer").text(hours + ":" + minutes + ":" + seconds);
-            }
+        $("#timer").text(hours + ":" + minutes + ":" + seconds);
+
+        // Kiểm tra nếu đã trôi qua 41 giây (41000 miligiây)
+        if (elapsedTime >= 41000 && !reloadTriggered) {
+            clearInterval(timerInterval); // Dừng đồng hồ bấm giờ
+            reloadTriggered = true; // Đánh dấu rằng đã kích hoạt reload
+
+            setTimeout(function() {
+                location.reload(); // Reload trang sau 1 giây
+            }, 1000);
+        }
+    }
         });
     </script>
 </body>
